@@ -1,0 +1,9 @@
+1. Open jpeg or png file.
+2. Scan edges in the image.
+3. Save the edge locations, in an array or matrix?
+4. Save a color palette based om image colors.
+4. Create a svg file, with a set viewbox.
+5. Draw lines in the viewbox using the edge locations.
+6. Fill in the shapes outlined by the edges.
+7. Draw in extra lines, using various colors and widths, around the edges.
+8. Save the svg file.

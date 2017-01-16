@@ -1,0 +1,100 @@
+include file io library
+include image processing library
+
+//*************************************************************************
+// Image file processing class/library
+//*************************************************************************
+class ImageProcessing {
+  routines:
+    openFile (string fname) {
+      fd = open file for reading(userFile);
+      check for open errors
+    }
+
+    getEdges(file descriptor fd) {
+      need to scan through each pixel of the image and return a set
+      of x,y coordinates that represent the edge locations
+
+      the set e will be used to draw lines in the svg file
+
+      will have to translate the x,y coordinates to the size of the
+      svg viewbox
+
+      return set;
+    }
+
+    getColors(file descriptor fd) {
+      need to scan through each pixel and return a set of rgb colors
+      used in the image
+
+      return set;
+    }
+
+  data:
+    file descriptor fd;
+    set of edges e;
+    set of rgb colors;
+}
+
+//*************************************************************************
+// SVG class
+//*************************************************************************
+class SVG {
+  routines:
+    // from set of edges, result is a set of shapes
+    constructor(fname) {
+      ip.openFile(fname);
+      edge set = ip.getEdgeSet();
+      color set = ip.getColorSet();
+
+      newFile = generateFileName();
+      fd.open(newFile);
+    }
+
+    drawLines(); // draw lines based on the edge set and create a set of shapes
+    fillShapes(); // use color palette to fill shapes
+    addExtraLines(); // use color palette, and artist palette to add extra lines
+    writeFile(); // write the svg file
+    generateFileName(); //generate a unique svg file name
+
+  data:
+    class ImageProcessing ip;
+    set of edges
+    set of image colors
+    set of artist colors
+
+    string newFile;
+
+    an array of lines drawn from edges
+    a set of shapes created from the lines
+    x,y coordinates of the viewbox
+    a file descriptor
+}
+
+//*************************************************************************
+//*************************************************************************
+void getUserFile() {
+  string name = get command line arg();
+
+  string tmp = name.to lower case();
+  if (userFile.extension != jpg ||
+      userfile.extenion != jpeg ||
+      userfile.extension != png) {
+    generate error;
+  }
+
+  return name;
+}
+
+//*************************************************************************
+//*************************************************************************
+main () {
+  string fname = getUserFile();
+
+  class SVG newSVG(fname);
+
+  newSVG.drawLines();
+  newSVG.fillShapes();
+  newSVG.addExtraLines();
+  newSVG.writeFile();
+}
