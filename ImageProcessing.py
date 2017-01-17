@@ -9,6 +9,7 @@ from skimage.color import rgb2gray
 from skimage import io, feature
 from skimage.filters import roberts, sobel
 import matplotlib.pyplot as plt
+import numpy as np
 
 #******************************************************************************
 # ImageProcessing class -
@@ -16,18 +17,22 @@ import matplotlib.pyplot as plt
 class ImageProcessing:
     "Class to handle scikit-image calls"
 
+    #*************************************************************************
+    # Constructor
+    #*************************************************************************
     def __init__(self, name):
         try:
             self.fileArray = io.imread(name)
             print(self.fileArray.shape)
             print(self.fileArray.size)
 
-
         except IOError:
             print("File %s open error" % name)
 
+    #*************************************************************************
+    # getEdges() - return ndarray of edge values
+    #*************************************************************************
     def getEdges(self):
-        # convert rgb image to 2D grayscale
         imgGray = rgb2gray(self.fileArray)
 
         # Detect edges, 3 possible algorithms
@@ -35,8 +40,37 @@ class ImageProcessing:
         #self.edges = roberts(self.imgGray)
         edges = sobel(imgGray)
 
-        print(edges)
-        io.imshow(edges)
-        plt.tight_layout()
-        plt.show()
         return edges
+
+    #*************************************************************************
+    # getColors() - return dictionary of rgb colors in original image
+    #*************************************************************************
+    def getColors(self):
+        # The image is a 3-dimensional array, with the 3 r,g,b pixel
+        # values at the [x,y] pixel location. Iterate through the
+        # array and create a table of the number of pixels for each
+        # rgb color.
+        colorList = {}
+
+        it = np.nditer(self.fileArray, flags=['multi_index'])
+        while not it.finished:
+            r = hex(it[0])
+            it.iternext()
+            g = hex(it[0])
+            it.iternext()
+            b = hex(it[0])
+
+            # Create an rgb string and the rgb hex value. The rgb
+            # string will be the key into the color table.
+            rgbStr = r[2:] + g[2:] + b[2:]
+            #rgb = int(rgbStr, 16)
+
+            if rgbStr in colorList:
+                colorList[rgbStr] += 1
+            else:
+                colorList[rgbStr] = 1
+
+            #print("0x%X " % rgb)
+            it.iternext()
+
+        return colorList
