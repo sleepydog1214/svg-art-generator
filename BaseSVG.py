@@ -16,6 +16,11 @@ class BaseSVG:
         self.header = self.header + '''<title>TS SVG Art Generator</title>
 <desc>SVG Art Creator by Thomas Suchyta</desc>'''
 
+        self.baseRect = '<g><rect id="baseRect" x="0" y="0" '
+        self.baseRect = self.baseRect + 'width="' + w + '" '
+        self.baseRect = self.baseRect + 'height="' + h + '" '
+        self.baseRect = self.baseRect + 'style="fill:rgb(255,255,255)" /></g>'
+
         self.groupStart = '<g id="group1" style="opacity:1">'
         self.groupEnd = '</g>'
 

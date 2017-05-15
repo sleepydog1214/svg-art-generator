@@ -18,19 +18,21 @@ class NewSVG(BaseSVG):
 
     def drawSVG(self):
         print(self.header)
+        print(self.baseRect)
         print(self.groupStart)
         self.drawLines()
         print(self.groupEnd)
         print(self.footer)
 
     def drawLines(self):
-        polyline = '<polyline id="polyline1" points="'
-        for line in self.contours:
-            polyline = polyline + ' ' + line
-        polyline = polyline + '''" style="fill:rgb(0,0,0);stroke:rgb(0,0,0);
+        for aContour in self.contours:
+            polyline = '<polyline id="polyline1" points="'
+            for line in aContour:
+                polyline = polyline + ' ' + line
+            polyline = polyline + '''" style="fill:none;stroke:rgb(0,0,0);
 stroke-width:1;"'''
-        polyline = polyline + '/>'
-        print(polyline)
+            polyline = polyline + '/>'
+            print(polyline)
 
     def __repr__(self):
         svg = ''

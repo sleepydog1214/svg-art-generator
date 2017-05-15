@@ -49,6 +49,8 @@ class ImageProcessing:
 
         for c in contours:
             # print(c.shape)
+            aContour = []
+
             it = np.nditer(c, flags=['multi_index'])
             while not it.finished:
                 x = str(it[0])
@@ -56,7 +58,9 @@ class ImageProcessing:
                 y = str(it[0])
                 it.iternext()
                 xy = x + ',' + y
-                contourList.append(xy)
+                aContour.append(xy)
+
+            contourList.append(aContour)
 
         # print(contours)
         return contourList
