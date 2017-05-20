@@ -11,7 +11,7 @@ from NewSVG import NewSVG
 def getUserFile():
     "This gets the name of the image file to process."
     try:
-        name = input("enter image file:")
+        name = input("enter image file: ")
         tmp = name.lower()
 
         # file must be a jpeg or png file

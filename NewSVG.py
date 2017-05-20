@@ -17,12 +17,13 @@ class NewSVG(BaseSVG):
         self.colors = self.ip.getColors()
 
     def drawSVG(self):
-        print(self.header)
-        print(self.baseRect)
-        print(self.groupStart)
+        self.svgCode = self.header
+        self.svgCode = self.svgCode + self.baseRect
+        self.svgCode = self.svgCode + self.groupStart
         self.drawLines()
-        print(self.groupEnd)
-        print(self.footer)
+        self.svgCode = self.svgCode + self.groupEnd
+        self.svgCode = self.svgCode + self.footer
+        self.writeFile()
 
     def drawLines(self):
         for aContour in self.contours:
@@ -31,12 +32,5 @@ class NewSVG(BaseSVG):
                 polyline = polyline + ' ' + line
             polyline = polyline + '''" style="fill:none;stroke:rgb(0,0,0);
 stroke-width:1;"'''
-            polyline = polyline + '/>'
-            print(polyline)
-
-    def __repr__(self):
-        svg = ''
-        for key in self.colors:
-            svg = svg + ',' + str(key) + ',' + str(self.colors[key])
-        svg = svg + "\n" + BaseSVG.__repr__(self)
-        return svg
+            polyline = polyline + '/>' + "\n"
+            self.svgCode = self.svgCode + polyline
