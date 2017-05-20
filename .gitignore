@@ -7,3 +7,4 @@ scratch
 .project
 .pydevproject
 log
+gen_svg

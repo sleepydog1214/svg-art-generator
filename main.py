@@ -1,5 +1,6 @@
 #!/usr/bin/python
 
+import sys
 from NewSVG import NewSVG
 # import pudb; pu.db
 
@@ -22,6 +23,7 @@ def getUserFile():
 
     except IOError:
         print("Input IO error (file must be jpg or png)")
+        sys.exit(1)
 
     return name
 

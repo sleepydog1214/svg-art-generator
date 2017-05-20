@@ -11,6 +11,8 @@ from skimage import io
 from skimage.measure import find_contours
 from skimage.exposure import rescale_intensity
 import numpy as np
+import math
+import sys
 
 # *****************************************************************************
 # ImageProcessing class -
@@ -29,12 +31,14 @@ class ImageProcessing:
 
             self.width = self.fileArray.shape[0]
             self.height = self.fileArray.shape[1]
+            self.depth = self.fileArray.shape[2]
 
             # print(self.width)
             # print(self.height)
 
         except IOError:
             print("File %s open error" % name)
+            sys.exit(1)
 
     # ************************************************************************
     # getContours() - return ndarray of contour values
@@ -53,12 +57,20 @@ class ImageProcessing:
 
             it = np.nditer(c, flags=['multi_index'])
             while not it.finished:
-                x = str(it[0])
+                x = it[0]
+                xStr = str(x)
+                
                 it.iternext()
-                y = str(it[0])
+
+                y = it[0]
+                yStr = str(y)
+
                 it.iternext()
-                xy = x + ',' + y
-                aContour.append(xy)
+
+                rgb = self.getColorAtPixel(x, y)
+                xyz = (xStr, yStr, rgb)
+
+                aContour.append(xyz)
 
             contourList.append(aContour)
 
@@ -97,3 +109,22 @@ class ImageProcessing:
             it.iternext()
 
         return colorList
+    
+    
+    def getColorAtPixel(self, x, y):
+        
+        x = math.ceil(x)
+        y = math.ceil(y)
+        
+        if x > self.width:
+            x = self.width
+        if y > self.height:
+            y = self.height
+            
+        r = hex(self.fileArray[x, y, 0])
+        g = hex(self.fileArray[x, y, 1])
+        b = hex(self.fileArray[x, y, 2])
+        rgbStr = r[2:] + g[2:] + b[2:]
+        return rgbStr
+                    
+            
