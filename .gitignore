@@ -4,3 +4,6 @@
 __pycache__
 svg-art-generator
 scratch
+.project
+.pydevproject
+log
