@@ -14,7 +14,8 @@ class BaseSVG:
         year = str(today.year)
         today = str(today)
         
-        self.filename = 'tsart-generated-' + timestamp + '.svg'
+        # Need a try here
+        self.filename = './gen_svg/tsart-generated-' + timestamp + '.svg'
         
         self.svgCode = ''
         
