@@ -17,8 +17,6 @@ import sys
 # *****************************************************************************
 # ImageProcessing class -
 # *****************************************************************************
-
-
 class ImageProcessing:
     "Class to handle scikit-image calls"
 

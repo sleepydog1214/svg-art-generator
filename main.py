@@ -1,14 +1,12 @@
 #!/usr/bin/python
 
 import sys
-from NewSVG import NewSVG
+from ArtSVG import ArtSVG
 # import pudb; pu.db
 
 # ******************************************************************************
 # getUserFile() -
 # *****************************************************************************
-
-
 def getUserFile():
     "This gets the name of the image file to process."
     try:
@@ -30,22 +28,18 @@ def getUserFile():
 # *****************************************************************************
 # main() -
 # *****************************************************************************
-
-
 def main():
     "Program start."
 
     name = getUserFile()
 
-    new_svg = NewSVG(name)
-    new_svg.drawSVG()
+    artSVG = ArtSVG(name)
+    artSVG.drawSVG()
 
     return
 
 # *****************************************************************************
 # Begin program
 # *****************************************************************************
-
-
 if __name__ == "__main__":
     main()
