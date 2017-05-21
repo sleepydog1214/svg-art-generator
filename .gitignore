@@ -1,3 +1,10 @@
 *.jpg
 *.svg
+*.pyc
 __pycache__
+svg-art-generator
+scratch
+.project
+.pydevproject
+log
+gen_svg
