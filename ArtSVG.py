@@ -1,6 +1,7 @@
 
 from ImageProcessing import ImageProcessing
 from BaseSVG import BaseSVG
+import math
 
 
 # *****************************************************************************
@@ -20,10 +21,15 @@ class ArtSVG(BaseSVG):
 
         self.width = self.ip.width
         self.height = self.ip.height
-        BaseSVG.__init__(self, self.width, self.height)
+        self.colors = self.ip.getColors()
+        
+        colorList = list(self.colors.keys())
+        mid = int(len(colorList) / 2)
+        rgb = colorList[mid]
+            
+        BaseSVG.__init__(self, self.width, self.height, rgb)
 
         self.contours = self.ip.getContours()
-        self.colors = self.ip.getColors()
 
 
     # ************************************************************************
@@ -31,8 +37,8 @@ class ArtSVG(BaseSVG):
     # ************************************************************************
     def drawSVG(self):
         self.svgCode = self.header
-        self.svgCode += self.baseRect
         self.svgCode += self.baseGroupStart
+        self.svgCode += self.baseRect
 
         self.drawShapes()
         self.drawLines()
@@ -56,7 +62,7 @@ class ArtSVG(BaseSVG):
             for pixel in aContour:
                 x = pixel[0]
                 y = pixel[1]
-                polyline = polyline + ' ' + x + ',' + y
+                polyline += ' ' + x + ',' + y
             polyline += '" style="fill:none;stroke:rgb(0,0,0); stroke-width:2;"'
             polyline += '/>' + "\n"
             self.svgCode += polyline
@@ -75,6 +81,8 @@ class ArtSVG(BaseSVG):
             ArtSVG.polygonIdx += 1
             
             midPoint = int(len(aContour) / 2)
+            firstX = aContour[0][0]
+            firstY = aContour[0][1]
             rgb = aContour[0][2]
             
             for i in range(len(aContour)):
@@ -84,11 +92,13 @@ class ArtSVG(BaseSVG):
                 if (i == midPoint):
                     rgb = aContour[i][2]
                 
-                polygon = polygon + ' ' + x + ',' + y
+                polygon += ' ' + x + ',' + y
 
+            polygon += ' ' + firstX + ',' + firstY
             polygon += '" style="fill:#' + rgb + ';'
             polygon += 'stroke(0,0,0);stroke-width:1;" />' + "\n"
             self.svgCode += polygon
 
         self.endGroup()
-             
+        
+        

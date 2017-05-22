@@ -13,7 +13,7 @@ class BaseSVG:
     # ************************************************************************
     # Constructor
     # ************************************************************************
-    def __init__(self, width, height):
+    def __init__(self, width, height, rgb):
         w = str(width)
         h = str(height)
 
@@ -45,7 +45,7 @@ class BaseSVG:
         self.baseRect = '<g><rect id="baseRect" x="0" y="0" '
         self.baseRect += 'width="' + w + '" '
         self.baseRect += 'height="' + h + '" '
-        self.baseRect += 'style="fill:rgb(255,255,255)" /></g>' + "\n"
+        self.baseRect += 'style="fill:#' + str(rgb) + '" /></g>' + "\n"
 
         self.footer = '</svg>' + "\n"
         

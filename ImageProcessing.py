@@ -8,7 +8,7 @@
 
 from skimage.color import rgb2gray
 from skimage import io
-from skimage.measure import find_contours
+from skimage.measure import find_contours, approximate_polygon
 from skimage.exposure import rescale_intensity
 import numpy as np
 import math
@@ -52,8 +52,10 @@ class ImageProcessing:
         for c in contours:
             # print(c.shape)
             aContour = []
+            p = approximate_polygon(c, 0.8)
 
-            it = np.nditer(c, flags=['multi_index'])
+            #it = np.nditer(c, flags=['multi_index'])
+            it = np.nditer(p, flags=['multi_index'])
             while not it.finished:
                 x = it[0]
                 xStr = str(x)
@@ -109,6 +111,9 @@ class ImageProcessing:
         return colorList
     
     
+    # ************************************************************************
+    # getColorAtPixel() - return rgb color at requested pixel location
+    # ************************************************************************
     def getColorAtPixel(self, x, y):
         
         x = math.ceil(x)
@@ -125,4 +130,3 @@ class ImageProcessing:
         rgbStr = r[2:] + g[2:] + b[2:]
         return rgbStr
                     
-            
