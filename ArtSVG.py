@@ -29,6 +29,8 @@ class ArtSVG(BaseSVG):
             
         BaseSVG.__init__(self, self.width, self.height, rgb)
 
+        self.segments = self.ip.getSegments()
+        #self.ip.getSegments()
         self.contours = self.ip.getContours()
 
 
@@ -40,7 +42,7 @@ class ArtSVG(BaseSVG):
         self.svgCode += self.baseGroupStart
         self.svgCode += self.baseRect
 
-        self.drawShapes()
+        #self.drawShapes()
         self.drawLines()
 
         self.svgCode += self.baseGroupEnd
@@ -53,6 +55,7 @@ class ArtSVG(BaseSVG):
     # drawLines() - 
     # ************************************************************************
     def drawLines(self):
+        '''
         self.startGroup()
         
         for aContour in self.contours:
@@ -63,11 +66,30 @@ class ArtSVG(BaseSVG):
                 x = pixel[0]
                 y = pixel[1]
                 polyline += ' ' + x + ',' + y
-            polyline += '" style="fill:none;stroke:rgb(0,0,0); stroke-width:2;"'
+            polyline += '" style="fill:none;stroke:rgb(0,0,0); stroke-width:1;"'
             polyline += '/>' + "\n"
             self.svgCode += polyline
             
         self.endGroup()
+        '''
+
+        self.startGroup()
+        
+        for aSegment in self.segments:
+            polyline = '<polyline id="polyline' + str(ArtSVG.polylineIdx) + '" points="'
+            ArtSVG.polylineIdx += 1
+            
+            for pixel in aSegment:
+                x = pixel[0]
+                y = pixel[1]
+                polyline += ' ' + x + ',' + y
+            polyline += '" style="fill:none;stroke:rgb(0,0,0); stroke-width:1;"'
+            polyline += '/>' + "\n"
+            self.svgCode += polyline
+        
+        self.endGroup()
+        
+        
             
 
     # ************************************************************************

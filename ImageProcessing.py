@@ -10,9 +10,13 @@ from skimage.color import rgb2gray
 from skimage import io
 from skimage.measure import find_contours, approximate_polygon
 from skimage.exposure import rescale_intensity
+from skimage.filters import sobel
+from skimage.morphology import watershed
 import numpy as np
 import math
 import sys
+from pygments.lexers.esoteric import CAmkESLexer
+from decorator import append
 
 # *****************************************************************************
 # ImageProcessing class -
@@ -26,6 +30,7 @@ class ImageProcessing:
     def __init__(self, name):
         try:
             self.fileArray = io.imread(name)
+            self.segmentList = []
 
             self.width = self.fileArray.shape[0]
             self.height = self.fileArray.shape[1]
@@ -42,12 +47,13 @@ class ImageProcessing:
     # getContours() - return ndarray of contour values
     # ************************************************************************
     def getContours(self):
-        contourList = []
-
         tmpImage = rescale_intensity(self.fileArray)
         imgGray = rgb2gray(tmpImage)
-
-        contours = find_contours(imgGray, 0.5)
+        return self.findContours(imgGray)
+        
+    def findContours(self, imgArray):
+        contourList = []
+        contours = find_contours(imgArray, 0.5)
 
         for c in contours:
             # print(c.shape)
@@ -77,6 +83,85 @@ class ImageProcessing:
         # print(contours)
         return contourList
 
+    def getSegments(self):
+        segmentList = []
+        
+        imgGray = rgb2gray(self.fileArray)
+        elevationMap = sobel(imgGray)
+
+        markers = np.zeros_like(imgGray)
+
+        for (i, x) in enumerate(imgGray):
+            for(j, y) in enumerate(x):
+                if imgGray[i][j] < 0.1:
+                    markers[i][j] = 1.0
+                elif imgGray[i][j] >= 0.1 and imgGray[i][j] < 0.2:
+                    markers[i][j] = 2.0
+                elif imgGray[i][j] >= 0.2 and imgGray[i][j] < 0.3:
+                    markers[i][j] = 3.0
+                elif imgGray[i][j] >= 0.3 and imgGray[i][j] < 0.4:
+                    markers[i][j] = 4.0
+                elif imgGray[i][j] >= 0.4 and imgGray[i][j] < 0.5:
+                    markers[i][j] = 5.0
+                elif imgGray[i][j] >= 0.5 and imgGray[i][j] < 0.6:
+                    markers[i][j] = 6.0
+                elif imgGray[i][j] >= 0.6 and imgGray[i][j] < 0.7:
+                    markers[i][j] = 7.0
+                elif imgGray[i][j] >= 0.7 and imgGray[i][j] < 0.8:
+                    markers[i][j] = 8.0
+                elif imgGray[i][j] >= 0.8 and imgGray[i][j] < 0.9:
+                    markers[i][j] = 9.0
+                else:
+                    markers[i][j] = 10.0
+                
+        segmentation = watershed(elevationMap, markers)
+        
+        #initialize the segment list
+        shape = segmentation.shape
+        numOfCols = shape[0]
+        numOfRows = shape[1]
+        for i in range(numOfCols):
+            segmentCols = []
+            for j in range(numOfRows):
+                segmentCols.append(0)
+            segmentList.append(segmentCols)
+            
+        # fill in the columns
+        x = 0
+        y = 0
+        for s in np.nditer(segmentation, order='F'):
+            if x == 0:
+                currPoint = s
+            
+            if s != currPoint:
+                    segmentList[x][y] = 1
+                    currPoint = s
+
+            x = x + 1
+            if x % numOfCols == 0:
+                x = 0
+                y = y + 1
+
+        # fill in the rows
+        x = 0
+        y = 0
+        for s in np.nditer(segmentation, order='C'):
+            if y == 0:
+                currPoint = s
+
+            if s != currPoint:
+                    segmentList[x][y] = 1
+                    currPoint = s
+
+            y = y + 1
+            if y % numOfRows == 0:
+                y = 0
+                x = x + 1
+
+        #print(segmentList)
+        return self.findContours(segmentList)
+            
+        
     # ************************************************************************
     # getColors() - return dictionary of rgb colors in original image
     # ************************************************************************
