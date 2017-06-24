@@ -1,0 +1,37 @@
+main -> getUserFile(): Takes a jpeg or png
+     -> creates a ArtSVG() object with the file name
+       -> ArtSVG creates an ImageProcessing() object with file name
+          -> ImageProcessing Constructor read the image file and sets the width,
+             height, and depth
+       -> ArtSVG calls ImageProcessing getColors()
+          -> getColors() creates a dictionary of rgb strings and a use count of
+             color
+       -> ArtSVG sets variable mid as the color in the middle of the list
+       -> ArtSVG calls the BaseSVG constructor to create the svg header and base
+          rectangle (uses mid to set the rectangle color)
+       -> ArtSVG calls ImageProcessing getSegments()
+          -> getSegments() returns the segment list (a set of contours, which
+             is a list of x,y points)
+       -> ArtSVG calls ImageProcessing getContours()
+          -> getContours() turns image into a grayscale and then calls
+             findContours() which returns a set of contours)
+    -> calls ArtSVG drawSVG() method
+       -> drawSVG() adds the svg code to svgCode
+       -> drawSVG() calls drawShapes()
+          -> drawShapes() uses the contour list to create a shape out of each
+             contours
+       -> drawSVG calls drawLines()
+         -> drawLines() first draws polylines out of the contours then drawSVG
+            draws polylines out of the segments
+       -> drawSVG() calls writeFile() from base class
+
+  Changes needed:
+
+  1. main.py needs to take command line arguments:
+     python main.py --input test1.jpg --output test1.svg (design this so other
+     options, like rgb colors, or tuning parameters)
+  2. How to turn 'python main.py' into a command like 'svg-art'? Could create
+     an alias, or bash script.
+  3. Start with the baseRect having a fill of white. Separate drawLines()
+     into 2 different methods. Tune the drawing of segments on the white
+     background. Need this to work first.
