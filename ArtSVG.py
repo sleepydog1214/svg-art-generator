@@ -43,14 +43,14 @@ class ArtSVG(BaseSVG):
         self.svgCode += self.baseRect
 
         #self.drawShapes()
-        self.drawSegmentShapes()
+        #self.drawSegmentShapes()
         #aColor = self.colorList[0]
         #self.drawSegments(aColor, "15", 1, "0.75")
         #self.drawSegments("150", "2")
         #self.drawSegments("95", "1.5")
-        #self.drawSegments("50", "1")
-        #self.drawSegments("0", "0.5")
-        #self.drawContours()
+        self.drawSegments("50", "1")
+        self.drawSegments("0", "0.5")
+        self.drawContours()
 
         self.svgCode += self.baseGroupEnd
         self.svgCode += self.footer
