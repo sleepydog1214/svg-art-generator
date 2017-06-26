@@ -50,7 +50,7 @@ class ImageProcessing:
         tmpImage = rescale_intensity(self.fileArray)
         imgGray = rgb2gray(tmpImage)
         return self.findContours(imgGray)
-        
+
     def findContours(self, imgArray):
         contourList = []
         contours = find_contours(imgArray, 0.5)
@@ -65,7 +65,7 @@ class ImageProcessing:
             while not it.finished:
                 x = it[0]
                 xStr = str(x)
-                
+
                 it.iternext()
 
                 y = it[0]
@@ -85,12 +85,13 @@ class ImageProcessing:
 
     def getSegments(self):
         segmentList = []
-        
+
         imgGray = rgb2gray(self.fileArray)
         elevationMap = sobel(imgGray)
 
         markers = np.zeros_like(imgGray)
 
+        '''
         for (i, x) in enumerate(imgGray):
             for(j, y) in enumerate(x):
                 if imgGray[i][j] < 0.1:
@@ -113,9 +114,19 @@ class ImageProcessing:
                     markers[i][j] = 9.0
                 else:
                     markers[i][j] = 10.0
-                
+        '''
+
+        for (i, x) in enumerate(imgGray):
+            for(j, y) in enumerate(x):
+                if imgGray[i][j] < 0.3:
+                    markers[i][j] = 1.0
+                elif imgGray[i][j] >= 0.3 and imgGray[i][j] < 0.6:
+                    markers[i][j] = 5.0
+                else:
+                    markers[i][j] = 10.0
+
         segmentation = watershed(elevationMap, markers)
-        
+
         #initialize the segment list
         shape = segmentation.shape
         numOfCols = shape[0]
@@ -125,14 +136,14 @@ class ImageProcessing:
             for j in range(numOfRows):
                 segmentCols.append(0)
             segmentList.append(segmentCols)
-            
+
         # fill in the columns
         x = 0
         y = 0
         for s in np.nditer(segmentation, order='F'):
             if x == 0:
                 currPoint = s
-            
+
             if s != currPoint:
                     segmentList[x][y] = 1
                     currPoint = s
@@ -160,8 +171,8 @@ class ImageProcessing:
 
         #print(segmentList)
         return self.findContours(segmentList)
-            
-        
+
+
     # ************************************************************************
     # getColors() - return dictionary of rgb colors in original image
     # ************************************************************************
@@ -194,24 +205,23 @@ class ImageProcessing:
             it.iternext()
 
         return colorList
-    
-    
+
+
     # ************************************************************************
     # getColorAtPixel() - return rgb color at requested pixel location
     # ************************************************************************
     def getColorAtPixel(self, x, y):
-        
+
         x = math.ceil(x)
         y = math.ceil(y)
-        
+
         if x > self.width:
             x = self.width
         if y > self.height:
             y = self.height
-            
+
         r = hex(self.fileArray[x, y, 0])
         g = hex(self.fileArray[x, y, 1])
         b = hex(self.fileArray[x, y, 2])
         rgbStr = r[2:] + g[2:] + b[2:]
         return rgbStr
-                    

@@ -24,9 +24,9 @@ class ArtSVG(BaseSVG):
         self.colors = self.ip.getColors()
 
         self.colorList = list(self.colors.keys())
-        #mid = int(len(self.colorList) / 2)
-        #rgb = colorList[mid]
-        rgb = "ffffff"
+        mid = int(len(self.colorList) / 2)
+        rgb = self.colorList[mid]
+        #rgb = "ffffff"
 
         BaseSVG.__init__(self, self.width, self.height, rgb)
 
@@ -42,12 +42,12 @@ class ArtSVG(BaseSVG):
         self.svgCode += self.baseGroupStart
         self.svgCode += self.baseRect
 
-        #self.drawShapes()
-        #self.drawSegmentShapes()
-        #aColor = self.colorList[0]
-        #self.drawSegments(aColor, "15", 1, "0.75")
-        #self.drawSegments("150", "2")
-        #self.drawSegments("95", "1.5")
+        self.drawShapes()
+        self.drawSegmentShapes()
+        aColor = self.colorList[0]
+        self.drawSegments(aColor, "5", 1, "0.75")
+        self.drawSegments("150", "2")
+        self.drawSegments("95", "1.5")
         self.drawSegments("50", "1")
         self.drawSegments("0", "0.5")
         self.drawContours()
