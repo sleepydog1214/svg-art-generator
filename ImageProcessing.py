@@ -12,6 +12,7 @@ from skimage.measure import find_contours, approximate_polygon
 from skimage.exposure import rescale_intensity
 from skimage.filters import sobel
 from skimage.morphology import watershed
+from skimage.restoration import denoise_tv_bregman, denoise_tv_chambolle
 import numpy as np
 import math
 import sys
@@ -30,6 +31,7 @@ class ImageProcessing:
     def __init__(self, name):
         try:
             self.fileArray = io.imread(name)
+            self.posterFileArray = self.getPosterize()
             self.segmentList = []
 
             self.width = self.fileArray.shape[0]
@@ -185,11 +187,11 @@ class ImageProcessing:
 
         it = np.nditer(self.fileArray, flags=['multi_index'])
         while not it.finished:
-            r = hex(it[0])
+            r = hex(int(it[0]))
             it.iternext()
-            g = hex(it[0])
+            g = hex(int(it[0]))
             it.iternext()
-            b = hex(it[0])
+            b = hex(int(it[0]))
 
             # Create an rgb string and the rgb hex value. The rgb
             # string will be the key into the color table.
@@ -220,8 +222,35 @@ class ImageProcessing:
         if y > self.height:
             y = self.height
 
-        r = hex(self.fileArray[x, y, 0])
-        g = hex(self.fileArray[x, y, 1])
-        b = hex(self.fileArray[x, y, 2])
+        r = hex(int(self.fileArray[x, y, 0]))
+        g = hex(int(self.fileArray[x, y, 1]))
+        b = hex(int(self.fileArray[x, y, 2]))
         rgbStr = r[2:] + g[2:] + b[2:]
         return rgbStr
+
+    def getPosterize(self):
+        #out = denoise_tv_bregman(self.fileArray, 0.75)
+        # This appears to be a better algorithm
+        out = denoise_tv_chambolle(self.fileArray, 0.05)
+        #print(self.fileArray)
+        #print(out)
+        # Could step through out and multiply each r,g,b value by 255 to get
+        # a new color value
+        # Need to round each value to the nearest tenth, I think
+        # try round(x, 2) or round(x, 1)
+
+        it = np.nditer(out, flags=['multi_index'], op_flags=['readwrite'])
+        while not it.finished:
+            r = 255 * round(float(it[0]), 2)
+            it[0] = r
+            it.iternext()
+            g = 255 * round(float(it[0]), 2)
+            it[0] = g
+            it.iternext()
+            b = 255 * round(float(it[0]), 2)
+            it[0] = b
+            it.iternext()
+
+        #print(out)
+        #still too many colors, want only about 25
+        return out

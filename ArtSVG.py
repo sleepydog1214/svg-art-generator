@@ -25,8 +25,8 @@ class ArtSVG(BaseSVG):
 
         self.colorList = list(self.colors.keys())
         mid = int(len(self.colorList) / 2)
-        rgb = self.colorList[mid]
-        #rgb = "ffffff"
+        #rgb = self.colorList[mid]
+        rgb = "ffffff"
 
         BaseSVG.__init__(self, self.width, self.height, rgb)
 
