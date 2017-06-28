@@ -93,7 +93,6 @@ class ImageProcessing:
 
         markers = np.zeros_like(imgGray)
 
-        '''
         for (i, x) in enumerate(imgGray):
             for(j, y) in enumerate(x):
                 if imgGray[i][j] < 0.1:
@@ -114,16 +113,6 @@ class ImageProcessing:
                     markers[i][j] = 8.0
                 elif imgGray[i][j] >= 0.8 and imgGray[i][j] < 0.9:
                     markers[i][j] = 9.0
-                else:
-                    markers[i][j] = 10.0
-        '''
-
-        for (i, x) in enumerate(imgGray):
-            for(j, y) in enumerate(x):
-                if imgGray[i][j] < 0.3:
-                    markers[i][j] = 1.0
-                elif imgGray[i][j] >= 0.3 and imgGray[i][j] < 0.6:
-                    markers[i][j] = 5.0
                 else:
                     markers[i][j] = 10.0
 
@@ -228,6 +217,9 @@ class ImageProcessing:
         rgbStr = r[2:] + g[2:] + b[2:]
         return rgbStr
 
+    # ************************************************************************
+    # getPosterize() - Convert image to a posterized version of 25 colors
+    # ************************************************************************
     def getPosterize(self):
         # Set number of colors sto posterize
         n = 25
@@ -260,4 +252,8 @@ class ImageProcessing:
         # at that color value location in palette
         im2 = palette[self.fileArray]
 
+        # Now need a column size list where each entry in the list is an
+        # array of x,y start point, x,y end point, and fill color
+        # [[[0,0, 5,0, afafaf], [6,0, 12,0, ef0022], [13,0, 25,0, ffaaff]],
+        #  [[0,1, 8,1, 554433], [9,1, 15,1, 99ddaa], [16,1, 25,1, 11aa44]]]
         return im2
