@@ -229,28 +229,35 @@ class ImageProcessing:
         return rgbStr
 
     def getPosterize(self):
-        #out = denoise_tv_bregman(self.fileArray, 0.75)
-        # This appears to be a better algorithm
-        out = denoise_tv_chambolle(self.fileArray, 0.05)
-        #print(self.fileArray)
-        #print(out)
-        # Could step through out and multiply each r,g,b value by 255 to get
-        # a new color value
-        # Need to round each value to the nearest tenth, I think
-        # try round(x, 2) or round(x, 1)
+        # Set number of colors sto posterize
+        n = 25
 
-        it = np.nditer(out, flags=['multi_index'], op_flags=['readwrite'])
-        while not it.finished:
-            r = 255 * round(float(it[0]), 2)
-            it[0] = r
-            it.iternext()
-            g = 255 * round(float(it[0]), 2)
-            it[0] = g
-            it.iternext()
-            b = 255 * round(float(it[0]), 2)
-            it[0] = b
-            it.iternext()
+        # List all colors, 0 to 255, a list of size 256
+        indices = np.arange(0,256)
 
-        #print(out)
-        #still too many colors, want only about 25
-        return out
+        # Get a divider to quantize the colors, 10.2 for n = 25
+        # Evenly divide the values from 0 to 255, by n + 1, take the
+        # second value in that array
+        divider = np.linspace(0,255,n+1)[1]
+
+        # Get the set of quantization colors
+        # A list of size n, evenly spaced between 0 and 255
+        quantiz = np.int0(np.linspace(0,255,n))
+
+        # Set the color levels
+        # Take each value in indices, divide by divider, convert the result
+        # to ints.
+        # Then clip (limit) each value to a value between 0 and 24
+        color_levels = np.clip(np.int0(indices/divider),0,n-1)
+
+        # Create the palette
+        # Replace each value in color_levels to the value in the same location
+        # in the quantiz list
+        palette = quantiz[color_levels]
+
+        # Apply the palette to the image
+        # Replace each color value in the image with its corresponding color
+        # at that color value location in palette
+        im2 = palette[self.fileArray]
+
+        return im2
