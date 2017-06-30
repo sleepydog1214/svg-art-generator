@@ -31,15 +31,13 @@ class ImageProcessing:
     def __init__(self, name):
         try:
             self.fileArray = io.imread(name)
-            self.posterFileArray = self.getPosterize()
             self.segmentList = []
 
             self.width = self.fileArray.shape[0]
             self.height = self.fileArray.shape[1]
             self.depth = self.fileArray.shape[2]
 
-            # print(self.width)
-            # print(self.height)
+            self.posterFileArray = self.getPosterize()
 
         except IOError:
             print("File %s open error" % name)
@@ -184,7 +182,7 @@ class ImageProcessing:
 
             # Create an rgb string and the rgb hex value. The rgb
             # string will be the key into the color table.
-            rgbStr = r[2:] + g[2:] + b[2:]
+            rgbStr = r[2:].zfill(2) + g[2:].zfill(2) + b[2:].zfill(2)
             # rgb = int(rgbStr, 16)
 
             if rgbStr in colorList:
@@ -256,4 +254,54 @@ class ImageProcessing:
         # array of x,y start point, x,y end point, and fill color
         # [[[0,0, 5,0, afafaf], [6,0, 12,0, ef0022], [13,0, 25,0, ffaaff]],
         #  [[0,1, 8,1, 554433], [9,1, 15,1, 99ddaa], [16,1, 25,1, 11aa44]]]
+        #print(self.fileArray)
+        #print(im2)
+        #print(self.height, self.width)
+        yIdx = 1
+        x = 1
+        y = 0
+        currentRGB = ""
+        startX = 0
+        startY = 0
+        lineList = []
+        it = np.nditer(self.fileArray, flags=['multi_index'])
+        while not it.finished:
+            r = hex(int(it[0]))
+            it.iternext()
+            g = hex(int(it[0]))
+            it.iternext()
+            b = hex(int(it[0]))
+            rgbStr = r[2:].zfill(2) + g[2:].zfill(2) + b[2:].zfill(2)
+            #print("entry: ", x, y, rgbStr)
+
+            if x == 1:
+                startX = 0
+                startY = y
+                currentRGB = rgbStr
+
+            elif rgbStr != currentRGB and startY == y:
+                #print(startX, startY, x - 1, y, currentRGB)
+                aLine = [startX, startY, x - 1, y, currentRGB]
+                lineList.append(aLine)
+                startX = x - 1
+                startY = y
+                currentRGB = rgbStr
+
+            if yIdx % self.height == 0:
+                #print(startX, startY, x, y, rgbStr)
+                aLine = [startX, startY, x, y, rgbStr]
+                lineList.append(aLine)
+                y += 1
+                yIdx = 1
+            else:
+                yIdx += 1
+
+            if x % self.height == 0:
+                x = 1
+            else:
+                x += 1
+
+            it.iternext()
+
+        print(lineList)
         return im2
