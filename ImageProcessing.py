@@ -37,7 +37,7 @@ class ImageProcessing:
             self.height = self.fileArray.shape[1]
             self.depth = self.fileArray.shape[2]
 
-            self.posterFileArray = self.getPosterize()
+            #self.posterFileArray = self.getPosterize()
 
         except IOError:
             print("File %s open error" % name)
@@ -56,7 +56,6 @@ class ImageProcessing:
         contours = find_contours(imgArray, 0.5)
 
         for c in contours:
-            # print(c.shape)
             aContour = []
             p = approximate_polygon(c, 0.8)
 
@@ -80,7 +79,6 @@ class ImageProcessing:
 
             contourList.append(aContour)
 
-        # print(contours)
         return contourList
 
     def getSegments(self):
@@ -158,7 +156,6 @@ class ImageProcessing:
                 y = 0
                 x = x + 1
 
-        #print(segmentList)
         return self.findContours(segmentList)
 
 
@@ -190,7 +187,6 @@ class ImageProcessing:
             else:
                 colorList[rgbStr] = 1
 
-            # print("0x%X " % rgb)
             it.iternext()
 
         return colorList
@@ -220,7 +216,7 @@ class ImageProcessing:
     # ************************************************************************
     def getPosterize(self):
         # Set number of colors sto posterize
-        n = 25
+        n = 10
 
         # List all colors, 0 to 255, a list of size 256
         indices = np.arange(0,256)
@@ -254,9 +250,6 @@ class ImageProcessing:
         # array of x,y start point, x,y end point, and fill color
         # [[[0,0, 5,0, afafaf], [6,0, 12,0, ef0022], [13,0, 25,0, ffaaff]],
         #  [[0,1, 8,1, 554433], [9,1, 15,1, 99ddaa], [16,1, 25,1, 11aa44]]]
-        #print(self.fileArray)
-        #print(im2)
-        #print(self.height, self.width)
         yIdx = 1
         x = 1
         y = 0
@@ -264,7 +257,7 @@ class ImageProcessing:
         startX = 0
         startY = 0
         lineList = []
-        it = np.nditer(self.fileArray, flags=['multi_index'])
+        it = np.nditer(im2, flags=['multi_index'])
         while not it.finished:
             r = hex(int(it[0]))
             it.iternext()
@@ -272,7 +265,6 @@ class ImageProcessing:
             it.iternext()
             b = hex(int(it[0]))
             rgbStr = r[2:].zfill(2) + g[2:].zfill(2) + b[2:].zfill(2)
-            #print("entry: ", x, y, rgbStr)
 
             if x == 1:
                 startX = 0
@@ -280,7 +272,6 @@ class ImageProcessing:
                 currentRGB = rgbStr
 
             elif rgbStr != currentRGB and startY == y:
-                #print(startX, startY, x - 1, y, currentRGB)
                 aLine = [startX, startY, x - 1, y, currentRGB]
                 lineList.append(aLine)
                 startX = x - 1
@@ -288,7 +279,6 @@ class ImageProcessing:
                 currentRGB = rgbStr
 
             if yIdx % self.height == 0:
-                #print(startX, startY, x, y, rgbStr)
                 aLine = [startX, startY, x, y, rgbStr]
                 lineList.append(aLine)
                 y += 1
@@ -303,5 +293,4 @@ class ImageProcessing:
 
             it.iternext()
 
-        print(lineList)
-        return im2
+        return lineList

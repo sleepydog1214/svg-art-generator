@@ -12,6 +12,7 @@ class ArtSVG(BaseSVG):
 
     polylineIdx = 1
     polygonIdx = 1
+    lineIdx = 1
 
     # ************************************************************************
     # Constructor
@@ -32,6 +33,7 @@ class ArtSVG(BaseSVG):
 
         self.segments = self.ip.getSegments()
         self.contours = self.ip.getContours()
+        self.colorLines = self.ip.getPosterize()
 
 
     # ************************************************************************
@@ -42,15 +44,16 @@ class ArtSVG(BaseSVG):
         self.svgCode += self.baseGroupStart
         self.svgCode += self.baseRect
 
-        self.drawShapes()
-        self.drawSegmentShapes()
-        aColor = self.colorList[0]
-        self.drawSegments(aColor, "5", 1, "0.75")
-        self.drawSegments("150", "2")
-        self.drawSegments("95", "1.5")
+        self.drawColorLines()
+        #self.drawShapes()
+        #self.drawSegmentShapes()
+        #aColor = self.colorList[0]
+        #self.drawSegments(aColor, "5", 1, "0.75")
+        #self.drawSegments("150", "2")
+        #self.drawSegments("95", "1.5")
         self.drawSegments("50", "1")
         self.drawSegments("0", "0.5")
-        self.drawContours()
+        #self.drawContours()
 
         self.svgCode += self.baseGroupEnd
         self.svgCode += self.footer
@@ -111,6 +114,32 @@ class ArtSVG(BaseSVG):
         self.endGroup()
 
 
+    # ************************************************************************
+    # drawColorLines() -
+    # ************************************************************************
+    def drawColorLines(self):
+        self.startGroup()
+        
+        for aLine in self.colorLines:
+            line = '<line id = "line' + str(ArtSVG.lineIdx) + '" '
+            ArtSVG.lineIdx += 1
+            x1 = str(aLine[0])
+            y1 = str(aLine[1])
+            x2 = str(aLine[2])
+            y2 = str(aLine[3])
+            rgb = aLine[4]
+            line += 'x1="' + x1 + '" '
+            line += 'y1="' + y1 + '" '
+            line += 'x2="' + x2 + '" '
+            line += 'y2="' + y2 + '" '
+            line += 'stroke-width="1" '
+            line += 'stroke="#' + rgb + '" '
+            line += '/>' + "\n"
+            self.svgCode += line
+        
+        self.endGroup()
+    
+    
     # ************************************************************************
     # drawShapes() -
     # ************************************************************************

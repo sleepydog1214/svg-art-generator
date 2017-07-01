@@ -35,3 +35,5 @@ main -> getUserFile(): Takes a jpeg or png
   3. Start with the baseRect having a fill of white. Separate drawLines()
      into 2 different methods. Tune the drawing of segments on the white
      background. Need this to work first.
+  4. The program can posterize but that list x,y dimensions is out of sync 
+     with the lines.
