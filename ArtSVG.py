@@ -43,16 +43,19 @@ class ArtSVG(BaseSVG):
         self.svgCode += self.baseGroupStart
         self.svgCode += self.baseRect
 
+        # 7/2/2107 - best combination for desired visual results so far, but
+        # need to speed the code up. One 600 px wide jpeg takes 20 minutes to
+        # process and another 20 minutes to show in Inkscape.
         self.drawColorLines()
-#        self.drawShapes()
-#        self.drawSegmentShapes()
-        aColor = self.colorList[0]
-        self.drawSegments(aColor, "0.75", 1, "0.75")
-#        self.drawSegments("150", "2")
-#        self.drawSegments("95", "1.5")
-        self.drawSegments("50", "0.5")
-        self.drawSegments("0", "0.25")
-        #self.drawContours()
+        #self.drawShapes()
+        #self.drawSegmentShapes()
+        #aColor = self.colorList[0]
+        #self.drawSegments(aColor, "0.75", 1, "0.75")
+        #self.drawSegments("150", "2")
+        #self.drawSegments("95", "1.5")
+        #self.drawSegments("50", "0.5")
+        self.drawSegments("0", "1")
+        self.drawContours()
 
         self.svgCode += self.baseGroupEnd
         self.svgCode += self.footer
