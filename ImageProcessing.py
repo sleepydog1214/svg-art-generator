@@ -33,11 +33,10 @@ class ImageProcessing:
             self.fileArray = io.imread(name)
             self.segmentList = []
 
-            self.width = self.fileArray.shape[0]
-            self.height = self.fileArray.shape[1]
+            self.height = self.fileArray.shape[0]
+            self.width = self.fileArray.shape[1]
             self.depth = self.fileArray.shape[2]
 
-            #self.posterFileArray = self.getPosterize()
 
         except IOError:
             print("File %s open error" % name)
@@ -278,7 +277,7 @@ class ImageProcessing:
                 startY = y
                 currentRGB = rgbStr
 
-            if yIdx % self.height == 0:
+            if yIdx % self.width == 0:
                 aLine = [startX, startY, x, y, rgbStr]
                 lineList.append(aLine)
                 y += 1
@@ -286,7 +285,7 @@ class ImageProcessing:
             else:
                 yIdx += 1
 
-            if x % self.height == 0:
+            if x % self.width == 0:
                 x = 1
             else:
                 x += 1

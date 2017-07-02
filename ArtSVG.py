@@ -45,15 +45,15 @@ class ArtSVG(BaseSVG):
         self.svgCode += self.baseRect
 
         self.drawColorLines()
-        #self.drawShapes()
-        #self.drawSegmentShapes()
-        #aColor = self.colorList[0]
-        #self.drawSegments(aColor, "5", 1, "0.75")
-        #self.drawSegments("150", "2")
-        #self.drawSegments("95", "1.5")
+        self.drawShapes()
+        self.drawSegmentShapes()
+        aColor = self.colorList[0]
+        self.drawSegments(aColor, "5", 1, "0.75")
+        self.drawSegments("150", "2")
+        self.drawSegments("95", "1.5")
         self.drawSegments("50", "1")
         self.drawSegments("0", "0.5")
-        #self.drawContours()
+        self.drawContours()
 
         self.svgCode += self.baseGroupEnd
         self.svgCode += self.footer
@@ -73,8 +73,8 @@ class ArtSVG(BaseSVG):
             ArtSVG.polylineIdx += 1
 
             for pixel in aContour:
-                x = pixel[0]
-                y = pixel[1]
+                x = pixel[1]
+                y = pixel[0]
                 polyline += ' ' + x + ',' + y
             polyline += '" style="fill:none;stroke:rgb(0,0,0); stroke-width:1;"'
             polyline += '/>' + "\n"
@@ -96,8 +96,8 @@ class ArtSVG(BaseSVG):
             idx = 1;
             for pixel in aSegment:
                 if idx % 2 == 0:
-                    x = pixel[0]
-                    y = pixel[1]
+                    x = pixel[1]
+                    y = pixel[0]
                     polyline += ' ' + x + ',' + y
                 idx = idx + 1
 
@@ -151,13 +151,13 @@ class ArtSVG(BaseSVG):
             ArtSVG.polygonIdx += 1
 
             midPoint = int(len(aContour) / 2)
-            firstX = aContour[0][0]
-            firstY = aContour[0][1]
+            firstX = aContour[0][1]
+            firstY = aContour[0][0]
             rgb = aContour[0][2]
 
             for i in range(len(aContour)):
-                x = aContour[i][0]
-                y = aContour[i][1]
+                x = aContour[i][1]
+                y = aContour[i][0]
 
                 if (i == midPoint):
                     rgb = aContour[i][2]
@@ -179,13 +179,13 @@ class ArtSVG(BaseSVG):
             ArtSVG.polygonIdx += 1
 
             midPoint = int(len(aSegment) / 2)
-            firstX = aSegment[0][0]
-            firstY = aSegment[0][1]
-            rgb = self.ip.getColorAtPixel(float(firstX), float(firstY))
+            firstX = aSegment[0][1]
+            firstY = aSegment[0][0]
+            rgb = self.ip.getColorAtPixel(float(firstY), float(firstX))
 
             for i in range(len(aSegment)):
-                x = aSegment[i][0]
-                y = aSegment[i][1]
+                x = aSegment[i][1]
+                y = aSegment[i][0]
                 polygon += ' ' + x + ',' + y
 
             polygon += ' ' + firstX + ',' + firstY
