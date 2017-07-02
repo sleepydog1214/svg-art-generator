@@ -26,7 +26,6 @@ class ArtSVG(BaseSVG):
 
         self.colorList = list(self.colors.keys())
         mid = int(len(self.colorList) / 2)
-        #rgb = self.colorList[mid]
         rgb = "ffffff"
 
         BaseSVG.__init__(self, self.width, self.height, rgb)
@@ -37,7 +36,7 @@ class ArtSVG(BaseSVG):
 
 
     # ************************************************************************
-    # drawSVG() -
+    # drawSVG() - Create the final svg file
     # ************************************************************************
     def drawSVG(self):
         self.svgCode = self.header
@@ -45,15 +44,15 @@ class ArtSVG(BaseSVG):
         self.svgCode += self.baseRect
 
         self.drawColorLines()
-        self.drawShapes()
-        self.drawSegmentShapes()
+#        self.drawShapes()
+#        self.drawSegmentShapes()
         aColor = self.colorList[0]
-        self.drawSegments(aColor, "5", 1, "0.75")
-        self.drawSegments("150", "2")
-        self.drawSegments("95", "1.5")
-        self.drawSegments("50", "1")
-        self.drawSegments("0", "0.5")
-        self.drawContours()
+        self.drawSegments(aColor, "0.75", 1, "0.75")
+#        self.drawSegments("150", "2")
+#        self.drawSegments("95", "1.5")
+        self.drawSegments("50", "0.5")
+        self.drawSegments("0", "0.25")
+        #self.drawContours()
 
         self.svgCode += self.baseGroupEnd
         self.svgCode += self.footer
@@ -62,7 +61,7 @@ class ArtSVG(BaseSVG):
 
 
     # ************************************************************************
-    # drawContours() -
+    # drawContours() - Use the contour list to draw a set of polylines
     # ************************************************************************
     def drawContours(self):
 
@@ -84,7 +83,7 @@ class ArtSVG(BaseSVG):
 
 
     # ************************************************************************
-    # drawSegments() -
+    # drawSegments() - Use the segment list to draw a set of polylines
     # ************************************************************************
     def drawSegments(self, color, width, setOpacity = 0, opacity = ""):
         self.startGroup()
@@ -115,7 +114,7 @@ class ArtSVG(BaseSVG):
 
 
     # ************************************************************************
-    # drawColorLines() -
+    # drawColorLines() - Draw set of horizontal lines, really lines of color
     # ************************************************************************
     def drawColorLines(self):
         self.startGroup()
@@ -141,7 +140,7 @@ class ArtSVG(BaseSVG):
     
     
     # ************************************************************************
-    # drawShapes() -
+    # drawShapes() - Use the contour list to draw a set of polygons
     # ************************************************************************
     def drawShapes(self):
         self.startGroup()
@@ -171,6 +170,10 @@ class ArtSVG(BaseSVG):
 
         self.endGroup()
 
+
+    # ************************************************************************
+    # drawSegmentShapes() - Use the segment list to draw a set of polygons
+    # ************************************************************************
     def drawSegmentShapes(self):
         self.startGroup()
 

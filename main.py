@@ -5,7 +5,7 @@ from ArtSVG import ArtSVG
 # import pudb; pu.db
 
 # ******************************************************************************
-# getUserFile() -
+# getUserFile() - Validate, then get, the name of the input image
 # *****************************************************************************
 def getUserFile():
     "This gets the name of the image file to process."
@@ -25,8 +25,9 @@ def getUserFile():
 
     return name
 
+
 # *****************************************************************************
-# main() -
+# main() - Start the svg generator program
 # *****************************************************************************
 def main():
     "Program start."
@@ -37,6 +38,7 @@ def main():
     artSVG.drawSVG()
 
     return
+
 
 # *****************************************************************************
 # Begin program

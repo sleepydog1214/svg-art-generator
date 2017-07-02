@@ -30,9 +30,10 @@ class ImageProcessing:
     # ************************************************************************
     def __init__(self, name):
         try:
+            # Convert input image into np array
             self.fileArray = io.imread(name)
-            self.segmentList = []
 
+            # Save the dimensions of the image
             self.height = self.fileArray.shape[0]
             self.width = self.fileArray.shape[1]
             self.depth = self.fileArray.shape[2]
@@ -42,23 +43,31 @@ class ImageProcessing:
             print("File %s open error" % name)
             sys.exit(1)
 
+
     # ************************************************************************
     # getContours() - return ndarray of contour values
     # ************************************************************************
     def getContours(self):
+        # Increase color intensity prior to convertung to a grayscale
         tmpImage = rescale_intensity(self.fileArray)
         imgGray = rgb2gray(tmpImage)
         return self.findContours(imgGray)
 
+
+    # ************************************************************************
+    # findContours() - return ndarray of contour values
+    # ************************************************************************
     def findContours(self, imgArray):
         contourList = []
         contours = find_contours(imgArray, 0.5)
 
         for c in contours:
             aContour = []
+            
+            # Concert the contour to a polygon
             p = approximate_polygon(c, 0.8)
 
-            #it = np.nditer(c, flags=['multi_index'])
+            # Save each x,y point and rgb color in the contour/polygon
             it = np.nditer(p, flags=['multi_index'])
             while not it.finished:
                 x = it[0]
@@ -80,6 +89,14 @@ class ImageProcessing:
 
         return contourList
 
+
+    # ************************************************************************
+    # getSegments() - Find segments through firsts finding the elevation map,
+    #                 then dividing the grayscale into 10 different gray values.
+    #                 The gray value markers and elevation map are used to find
+    #                 each distinct segment. Equivalent values in the segmentation
+    #                 are grouped together to build the segment list.
+    # ************************************************************************
     def getSegments(self):
         segmentList = []
 
@@ -209,6 +226,7 @@ class ImageProcessing:
         b = hex(int(self.fileArray[x, y, 2]))
         rgbStr = r[2:] + g[2:] + b[2:]
         return rgbStr
+
 
     # ************************************************************************
     # getPosterize() - Convert image to a posterized version of 25 colors

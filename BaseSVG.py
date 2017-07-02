@@ -22,7 +22,6 @@ class BaseSVG:
         year = str(today.year)
         today = str(today)
         
-        # Need a try here
         self.filename = './gen_svg/tsart-generated-' + timestamp + '.svg'
         
         self.svgCode = ''
@@ -49,21 +48,24 @@ class BaseSVG:
 
         self.footer = '</svg>' + "\n"
         
+
     # ************************************************************************
-    # startGroup() - 
+    # startGroup() -  Start a svg group
     # ************************************************************************
     def startGroup(self):
         self.svgCode += '<g id="group' + str(BaseSVG.groupIdx) + '">'
         BaseSVG.groupIdx += 1
         
+
     # ************************************************************************
-    # endGroup() - 
+    # endGroup() - Close a svg group
     # ************************************************************************
     def endGroup(self):
         self.svgCode += '</g>' + "\n"
 
+
     # ************************************************************************
-    # writeFile() - 
+    # writeFile() - Write the svg file.
     # ************************************************************************
     def writeFile(self):
         file = open(self.filename, 'w')
