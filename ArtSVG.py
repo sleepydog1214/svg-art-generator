@@ -30,9 +30,9 @@ class ArtSVG(BaseSVG):
 
         BaseSVG.__init__(self, self.width, self.height, rgb)
 
+        self.colorLines = self.ip.getPosterize()
         self.segments = self.ip.getSegments()
         self.contours = self.ip.getContours()
-        self.colorLines = self.ip.getPosterize()
 
 
     # ************************************************************************
@@ -47,6 +47,7 @@ class ArtSVG(BaseSVG):
         # need to speed the code up. One 600 px wide jpeg takes 20 minutes to
         # process and another 20 minutes to show in Inkscape.
         self.drawColorLines()
+        #self.drawPath()
         #self.drawShapes()
         #self.drawSegmentShapes()
         #aColor = self.colorList[0]
@@ -54,7 +55,7 @@ class ArtSVG(BaseSVG):
         #self.drawSegments("150", "2")
         #self.drawSegments("95", "1.5")
         #self.drawSegments("50", "0.5")
-        self.drawSegments("0", "1")
+        self.drawSegments("0", "2")
         self.drawContours()
 
         self.svgCode += self.baseGroupEnd
@@ -78,7 +79,7 @@ class ArtSVG(BaseSVG):
                 x = pixel[1]
                 y = pixel[0]
                 polyline += ' ' + x + ',' + y
-            polyline += '" style="fill:none;stroke:rgb(0,0,0); stroke-width:1;"'
+            polyline += '" style="fill:none;stroke:rgb(0,0,0); stroke-width:2;"'
             polyline += '/>' + "\n"
             self.svgCode += polyline
 
@@ -122,26 +123,60 @@ class ArtSVG(BaseSVG):
     def drawColorLines(self):
         self.startGroup()
         
+        idx = 1
         for aLine in self.colorLines:
-            line = '<line id = "line' + str(ArtSVG.lineIdx) + '" '
-            ArtSVG.lineIdx += 1
-            x1 = str(aLine[0])
-            y1 = str(aLine[1])
-            x2 = str(aLine[2])
-            y2 = str(aLine[3])
-            rgb = aLine[4]
-            line += 'x1="' + x1 + '" '
-            line += 'y1="' + y1 + '" '
-            line += 'x2="' + x2 + '" '
-            line += 'y2="' + y2 + '" '
-            line += 'stroke-width="1" '
-            line += 'stroke="#' + rgb + '" '
-            line += '/>' + "\n"
-            self.svgCode += line
+            if idx % 6 == 1:
+                line = '<line id = "line' + str(ArtSVG.lineIdx) + '" '
+                ArtSVG.lineIdx += 1
+                #x1 = str(aLine[0])
+                #y1 = str(aLine[1])
+                #x2 = str(aLine[2])
+                #y2 = str(aLine[3])
+                x1 = aLine[0] - 7
+                y1 = aLine[1] - 7
+                x2 = x1 + 7
+                y2 = y1 + 7
+                rgb = aLine[4]
+                line += 'x1="' + str(x1) + '" '
+                line += 'y1="' + str(y1) + '" '
+                line += 'x2="' + str(x2) + '" '
+                line += 'y2="' + str(y2) + '" '
+                line += 'stroke-width="8" '
+                line += 'stroke="#' + rgb + '" '
+                line += '/>' + "\n"
+                self.svgCode += line
+            idx += 1
         
         self.endGroup()
     
-    
+    # ************************************************************************
+    # drawPath() - 
+    # ************************************************************************
+    def drawPath(self):
+        self.startGroup()
+        
+        idx = 1
+        for points in self.ip.points:
+            if idx % 10 == 0:
+                line = '<line id = "line' + str(ArtSVG.lineIdx) + '" '
+                ArtSVG.lineIdx += 1
+                x1 = points[0] - 3
+                y1 = points[1] - 3
+                x2 = x1 + 3
+                y2 = y1 + 3
+                line += 'x1="' + str(x1) + '" '
+                line += 'y1="' + str(y1) + '" '
+                line += 'x2="' + str(x2) + '" '
+                line += 'y2="' + str(y2) + '" '
+                line += 'stroke-width="2" '
+                line += 'stroke="#000000" '
+                line += '/>' + "\n"
+                self.svgCode += line
+            idx += 1
+
+        self.endGroup()
+        
+        
     # ************************************************************************
     # drawShapes() - Use the contour list to draw a set of polygons
     # ************************************************************************

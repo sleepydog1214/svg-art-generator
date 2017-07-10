@@ -37,6 +37,8 @@ class ImageProcessing:
             self.height = self.fileArray.shape[0]
             self.width = self.fileArray.shape[1]
             self.depth = self.fileArray.shape[2]
+            self.points = []
+            self.posterArray = []
 
 
         except IOError:
@@ -233,7 +235,7 @@ class ImageProcessing:
     # ************************************************************************
     def getPosterize(self):
         # Set number of colors sto posterize
-        n = 10
+        n = 8
 
         # List all colors, 0 to 255, a list of size 256
         indices = np.arange(0,256)
@@ -262,6 +264,7 @@ class ImageProcessing:
         # Replace each color value in the image with its corresponding color
         # at that color value location in palette
         im2 = palette[self.fileArray]
+        self.posterArray = im2
 
         # Now need a column size list where each entry in the list is an
         # array of x,y start point, x,y end point, and fill color
@@ -290,6 +293,8 @@ class ImageProcessing:
 
             elif rgbStr != currentRGB and startY == y:
                 aLine = [startX, startY, x - 1, y, currentRGB]
+                onePoint = [x - 1, y]
+                self.points.append(onePoint)
                 lineList.append(aLine)
                 startX = x - 1
                 startY = y
@@ -311,3 +316,4 @@ class ImageProcessing:
             it.iternext()
 
         return lineList
+        
