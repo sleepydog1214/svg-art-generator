@@ -37,9 +37,6 @@ class ImageProcessing:
             self.height = self.fileArray.shape[0]
             self.width = self.fileArray.shape[1]
             self.depth = self.fileArray.shape[2]
-            self.points = []
-            self.posterArray = []
-
 
         except IOError:
             print("File %s open error" % name)
@@ -82,8 +79,7 @@ class ImageProcessing:
 
                 it.iternext()
 
-                rgb = self.getColorAtPixel(x, y)
-                xyz = (xStr, yStr, rgb)
+                xyz = (xStr, yStr)
 
                 aContour.append(xyz)
 
@@ -178,60 +174,7 @@ class ImageProcessing:
 
 
     # ************************************************************************
-    # getColors() - return dictionary of rgb colors in original image
-    # ************************************************************************
-    def getColors(self):
-        # The image is a 3-dimensional array, with the 3 r,g,b pixel
-        # values at the [x,y] pixel location. Iterate through the
-        # array and create a table of the number of pixels for each
-        # rgb color.
-        colorList = {}
-
-        it = np.nditer(self.fileArray, flags=['multi_index'])
-        while not it.finished:
-            r = hex(int(it[0]))
-            it.iternext()
-            g = hex(int(it[0]))
-            it.iternext()
-            b = hex(int(it[0]))
-
-            # Create an rgb string and the rgb hex value. The rgb
-            # string will be the key into the color table.
-            rgbStr = r[2:].zfill(2) + g[2:].zfill(2) + b[2:].zfill(2)
-            # rgb = int(rgbStr, 16)
-
-            if rgbStr in colorList:
-                colorList[rgbStr] += 1
-            else:
-                colorList[rgbStr] = 1
-
-            it.iternext()
-
-        return colorList
-
-
-    # ************************************************************************
-    # getColorAtPixel() - return rgb color at requested pixel location
-    # ************************************************************************
-    def getColorAtPixel(self, x, y):
-
-        x = math.ceil(x)
-        y = math.ceil(y)
-
-        if x > self.width:
-            x = self.width
-        if y > self.height:
-            y = self.height
-
-        r = hex(int(self.fileArray[x, y, 0]))
-        g = hex(int(self.fileArray[x, y, 1]))
-        b = hex(int(self.fileArray[x, y, 2]))
-        rgbStr = r[2:] + g[2:] + b[2:]
-        return rgbStr
-
-
-    # ************************************************************************
-    # getPosterize() - Convert image to a posterized version of 25 colors
+    # getPosterize() - Convert image to a posterized version of 8 colors
     # ************************************************************************
     def getPosterize(self):
         # Set number of colors sto posterize
@@ -264,7 +207,6 @@ class ImageProcessing:
         # Replace each color value in the image with its corresponding color
         # at that color value location in palette
         im2 = palette[self.fileArray]
-        self.posterArray = im2
 
         # Now need a column size list where each entry in the list is an
         # array of x,y start point, x,y end point, and fill color
@@ -294,7 +236,6 @@ class ImageProcessing:
             elif rgbStr != currentRGB and startY == y:
                 aLine = [startX, startY, x - 1, y, currentRGB]
                 onePoint = [x - 1, y]
-                self.points.append(onePoint)
                 lineList.append(aLine)
                 startX = x - 1
                 startY = y

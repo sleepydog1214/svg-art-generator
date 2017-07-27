@@ -22,10 +22,7 @@ class ArtSVG(BaseSVG):
 
         self.width = self.ip.width
         self.height = self.ip.height
-        self.colors = self.ip.getColors()
 
-        self.colorList = list(self.colors.keys())
-        mid = int(len(self.colorList) / 2)
         rgb = "ffffff"
 
         BaseSVG.__init__(self, self.width, self.height, rgb)
@@ -43,18 +40,7 @@ class ArtSVG(BaseSVG):
         self.svgCode += self.baseGroupStart
         self.svgCode += self.baseRect
 
-        # 7/2/2107 - best combination for desired visual results so far, but
-        # need to speed the code up. One 600 px wide jpeg takes 20 minutes to
-        # process and another 20 minutes to show in Inkscape.
         self.drawColorLines()
-        #self.drawPath()
-        #self.drawShapes()
-        #self.drawSegmentShapes()
-        #aColor = self.colorList[0]
-        #self.drawSegments(aColor, "0.75", 1, "0.75")
-        #self.drawSegments("150", "2")
-        #self.drawSegments("95", "1.5")
-        #self.drawSegments("50", "0.5")
         self.drawSegments("0", "2")
         self.drawContours()
 
@@ -128,10 +114,6 @@ class ArtSVG(BaseSVG):
             if idx % 6 == 1:
                 line = '<line id = "line' + str(ArtSVG.lineIdx) + '" '
                 ArtSVG.lineIdx += 1
-                #x1 = str(aLine[0])
-                #y1 = str(aLine[1])
-                #x2 = str(aLine[2])
-                #y2 = str(aLine[3])
                 x1 = aLine[0] - 7
                 y1 = aLine[1] - 7
                 x2 = x1 + 7
@@ -147,91 +129,4 @@ class ArtSVG(BaseSVG):
                 self.svgCode += line
             idx += 1
         
-        self.endGroup()
-    
-    # ************************************************************************
-    # drawPath() - 
-    # ************************************************************************
-    def drawPath(self):
-        self.startGroup()
-        
-        idx = 1
-        for points in self.ip.points:
-            if idx % 10 == 0:
-                line = '<line id = "line' + str(ArtSVG.lineIdx) + '" '
-                ArtSVG.lineIdx += 1
-                x1 = points[0] - 3
-                y1 = points[1] - 3
-                x2 = x1 + 3
-                y2 = y1 + 3
-                line += 'x1="' + str(x1) + '" '
-                line += 'y1="' + str(y1) + '" '
-                line += 'x2="' + str(x2) + '" '
-                line += 'y2="' + str(y2) + '" '
-                line += 'stroke-width="2" '
-                line += 'stroke="#000000" '
-                line += '/>' + "\n"
-                self.svgCode += line
-            idx += 1
-
-        self.endGroup()
-        
-        
-    # ************************************************************************
-    # drawShapes() - Use the contour list to draw a set of polygons
-    # ************************************************************************
-    def drawShapes(self):
-        self.startGroup()
-
-        for aContour in self.contours:
-            polygon = '<polygon id="polygon' + str(ArtSVG.polygonIdx) + '" points="'
-            ArtSVG.polygonIdx += 1
-
-            midPoint = int(len(aContour) / 2)
-            firstX = aContour[0][1]
-            firstY = aContour[0][0]
-            rgb = aContour[0][2]
-
-            for i in range(len(aContour)):
-                x = aContour[i][1]
-                y = aContour[i][0]
-
-                if (i == midPoint):
-                    rgb = aContour[i][2]
-
-                polygon += ' ' + x + ',' + y
-
-            polygon += ' ' + firstX + ',' + firstY
-            polygon += '" style="fill:#' + rgb + ';'
-            polygon += 'stroke(0,0,0);stroke-width:1;" />' + "\n"
-            self.svgCode += polygon
-
-        self.endGroup()
-
-
-    # ************************************************************************
-    # drawSegmentShapes() - Use the segment list to draw a set of polygons
-    # ************************************************************************
-    def drawSegmentShapes(self):
-        self.startGroup()
-
-        for aSegment in self.segments:
-            polygon = '<polygon id="polygon' + str(ArtSVG.polygonIdx) + '" points="'
-            ArtSVG.polygonIdx += 1
-
-            midPoint = int(len(aSegment) / 2)
-            firstX = aSegment[0][1]
-            firstY = aSegment[0][0]
-            rgb = self.ip.getColorAtPixel(float(firstY), float(firstX))
-
-            for i in range(len(aSegment)):
-                x = aSegment[i][1]
-                y = aSegment[i][0]
-                polygon += ' ' + x + ',' + y
-
-            polygon += ' ' + firstX + ',' + firstY
-            polygon += '" style="fill:#' + rgb + ';'
-            polygon += 'stroke(0,0,0);stroke-width:50;opacity:0.5" />' + "\n"
-            self.svgCode += polygon
-
         self.endGroup()
