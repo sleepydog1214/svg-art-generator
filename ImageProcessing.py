@@ -11,7 +11,7 @@ from skimage import io
 from skimage.measure import find_contours, approximate_polygon
 from skimage.exposure import rescale_intensity
 from skimage.filters import sobel
-from skimage.morphology import watershed
+from skimage.segmentation import watershed
 from skimage.restoration import denoise_tv_bregman, denoise_tv_chambolle
 import numpy as np
 import math
@@ -58,6 +58,10 @@ class ImageProcessing:
     # ************************************************************************
     def findContours(self, imgArray):
         contourList = []
+
+        # Ensure imgArray is a NumPy array
+        imgArray = np.array(imgArray)
+
         contours = find_contours(imgArray, 0.5)
 
         for c in contours:
@@ -125,6 +129,12 @@ class ImageProcessing:
                     markers[i][j] = 9.0
                 else:
                     markers[i][j] = 10.0
+
+        # Ensure elevationMap is a floating-point array
+        elevationMap = np.array(elevationMap, dtype=np.float64)
+        
+        # Ensure markers is an integer array
+        markers = np.array(markers, dtype=np.int32)
 
         segmentation = watershed(elevationMap, markers)
 

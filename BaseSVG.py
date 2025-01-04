@@ -27,7 +27,9 @@ class BaseSVG:
         self.svgCode = ''
         
         self.header = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>' + "\n"
+        self.header += '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">' + "\n"
         self.header += '<svg' + "\n"
+        self.header += 'xmlns="http://www.w3.org/2000/svg"' + "\n"
         self.header += 'version="1.1"' + "\n"
         self.header += 'width="''' + w + '"' + "\n"
         self.header += '    height="' + h + '"' + "\n"

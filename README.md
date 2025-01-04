@@ -8,3 +8,16 @@ Stéfan van der Walt, Johannes L. Schönberger, Juan Nunez-Iglesias, François B
 
 ## License
 [The MIT License](LICENSE.txt)
+
+To run requires Anaconda 3 and skimage:
+
+$ pyenv versions
+* anaconda3-2024.10-1 
+
+$conda install -c conda-forge scikit-image
+
+Then make a gen_svg directory. 
+
+To test:
+
+$python main.py images/check10x10.png
